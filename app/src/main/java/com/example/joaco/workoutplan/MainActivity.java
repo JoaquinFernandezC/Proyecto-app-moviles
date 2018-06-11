@@ -1,17 +1,44 @@
 package com.example.joaco.workoutplan;
 
+import android.arch.persistence.room.Room;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
+    private SharedPref sharedPref;
+    private AppDatabase appDatabase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        HashSet<Date> events = new HashSet<>();
+
+        CalendarView cv = (CalendarView)findViewById(R.id.calendar_view);
+        cv.updateCalendar(events);
+
+        cv.setEventHandler(new CalendarView.EventHandler()
+        {
+            @Override
+            public void onDayLongPress(Date date){
+                DateFormat df = SimpleDateFormat.getDateInstance();
+                Toast.makeText(MainActivity.this, df.format(date), Toast.LENGTH_SHORT).show();
+            }
+        });
+        appDatabase = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database").
+                fallbackToDestructiveMigration().build();
+
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bot_nav);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -19,10 +46,23 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        if (savedInstanceState == null){
-            getSupportFragmentManager().
-            beginTransaction().replace(R.id.content, new CalendarFragment()).commit();
+        sharedPref = sharedPref.getInstance(this);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+        if (id == R.id.action_settings)
+        {
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 }

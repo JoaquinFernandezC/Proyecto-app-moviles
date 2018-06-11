@@ -28,6 +28,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+        <com.example.joaco.workoutplan.CalendarView
+            xmlns:calendarNS = "http://schemas.android.com/apk/res/com.example.joaco.workoutplan"
+            android:id="@+id/calendar_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            calendarNS:dateFormat = "MMMM yyyy"/>
 
     </FrameLayout>
 </android.support.constraint.ConstraintLayout>

@@ -121,6 +121,7 @@ public class CalendarView extends LinearLayout {
             {
                 currentDate.add(Calendar.MONTH, 1);
                 updateCalendar();
+                eventHandler.setEvents();
             }
         });
 
@@ -132,6 +133,7 @@ public class CalendarView extends LinearLayout {
             {
                 currentDate.add(Calendar.MONTH, -1);
                 updateCalendar();
+                eventHandler.setEvents();
             }
         });
 
@@ -284,5 +286,7 @@ public class CalendarView extends LinearLayout {
     public interface EventHandler
     {
         void onDayLongPress(Date date);
+
+        void setEvents();
     }
 }

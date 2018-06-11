@@ -18,22 +18,31 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPref sharedPref;
     private AppDatabase appDatabase;
+    private HashSet<Date> events;
+    private CalendarView cv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        HashSet<Date> events = new HashSet<>();
+        events = new HashSet<>();
 
-        CalendarView cv = (CalendarView)findViewById(R.id.calendar_view);
-        cv.updateCalendar(events);
+        cv = (CalendarView)findViewById(R.id.calendar_view);
+
 
         cv.setEventHandler(new CalendarView.EventHandler()
         {
             @Override
             public void onDayLongPress(Date date){
+                events.add(date);
                 DateFormat df = SimpleDateFormat.getDateInstance();
                 Toast.makeText(MainActivity.this, df.format(date), Toast.LENGTH_SHORT).show();
+                cv.updateCalendar(events);
+            }
+
+            @Override
+            public void setEvents() {
+                cv.updateCalendar(events);
             }
         });
         appDatabase = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database").

@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">WorkoutPlan</string>
+    <string name="starting_date">Starting Date</string>
+    <string name="finish_date">Finish Date</string>
+    <string name="starting_hour">Starting Hour</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="when">When?</string>
+    <string name="available_exercises">Available exercises</string>
+    <string name="select_exercise">Select exercise</string>
+    <string name="selected_exercises">Selected Exercises:</string>
 </resources>

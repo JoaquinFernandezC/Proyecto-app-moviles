@@ -134,11 +134,12 @@ public class MainActivity extends AppCompatActivity{
                 if(!days.isEmpty() && !selectedExercises.isEmpty()) {
                     Routine routine = new Routine(starts, finishes, days, selectedExercises, time, true);
                     Toast.makeText(MainActivity.this, "Routine created Successfully", Toast.LENGTH_LONG).show();
+                    db.routineDao().insertRoutine(routine);
                 }
                 else{
                     Toast.makeText(MainActivity.this, "Cannot create routine", Toast.LENGTH_LONG).show();
                 }
-                //db.routineDao().insertRoutine(routine);
+
             }
         });
 

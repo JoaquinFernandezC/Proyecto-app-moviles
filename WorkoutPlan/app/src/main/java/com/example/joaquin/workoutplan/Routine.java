@@ -46,11 +46,11 @@ public class Routine {
     public Boolean getIsActive() { return IsActive; }
 
     public void setId(@NonNull int id) { Id = id; }
-    public void setStartDate(String startDate) { StartDate = startDate; }
-    public void setFinishDate(String finishDate) { FinishDate = finishDate; }
-    public void setDays(ArrayList<String> days) { Days = days; }
-    public void setExercises(ArrayList<String> exercises) { Exercises = exercises; }
-    public void setHour(String hour) { Hour = hour; }
-    public void setIsActive(Boolean active) { IsActive = active; }
+    public void setStartDate(String startDate) { this.StartDate = startDate; }
+    public void setFinishDate(String finishDate) { this.FinishDate = finishDate; }
+    public void setDays(ArrayList<String> days) { this.Days = days; }
+    public void setExercises(ArrayList<String> exercises) { this.Exercises = exercises; }
+    public void setHour(String hour) { this.Hour = hour; }
+    public void setIsActive(Boolean active) { this.IsActive = active; }
 
 }

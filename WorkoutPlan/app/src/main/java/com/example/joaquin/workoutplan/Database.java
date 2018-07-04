@@ -8,12 +8,14 @@ import android.support.annotation.NonNull;
 
 import java.util.concurrent.Executors;
 
-@android.arch.persistence.room.Database(entities = {Exercise.class}, version = 1, exportSchema = false)
+@android.arch.persistence.room.Database(entities = {Exercise.class, /*Routine.class*/}, version = 1, exportSchema = false)
+//@TypeConverters({Converters.class})
 public abstract class Database extends RoomDatabase {
 
     private static Database INSTANCE;
 
     public abstract ExerciseDao exerciseDao();
+    //public abstract RoutineDao routineDao();
 
     public synchronized static Database getInstance(Context context){
         if (INSTANCE==null){

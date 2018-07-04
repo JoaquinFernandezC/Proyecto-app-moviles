@@ -129,8 +129,8 @@
         android:id="@+id/select_exercise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/available"
-        android:layout_toEndOf="@+id/when"
+        android:layout_alignStart="@+id/Friday"
+        android:layout_below="@+id/exercises"
         android:text="@string/select_exercise" />
 
     <TextView
@@ -143,5 +143,14 @@
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp" />
 
+    <Button
+        android:id="@+id/create_routine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="46dp"
+        android:text="@string/create_routine"
+        android:background="@drawable/rounded_button"/>
 
 </RelativeLayout>

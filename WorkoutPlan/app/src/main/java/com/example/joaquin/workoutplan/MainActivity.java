@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -35,8 +36,17 @@ public class MainActivity extends AppCompatActivity{
     private List<Exercise> exercises;
     private ArrayList<String> exerciseNames;
     private ArrayAdapter adapter;
-    private List<Exercise> selectedExercises;
+    private ArrayList<String> selectedExercises;
     private TextView selectedExercisesTV;
+    private Button createRoutine;
+    private CheckBox monday;
+    private CheckBox tuesday;
+    private CheckBox wednesday;
+    private CheckBox thursday;
+    private CheckBox friday;
+    private CheckBox saturday;
+    private CheckBox sunday;
+    private ArrayList<String> days;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +60,17 @@ public class MainActivity extends AppCompatActivity{
         startTime = (TextView) findViewById(R.id.hour);
         exerciseSpinner = (Spinner) findViewById(R.id.exercises);
         selectExercise = (Button) findViewById(R.id.select_exercise);
-        selectedExercises = new ArrayList<Exercise>();
+        selectedExercises = new ArrayList<String>();
         selectedExercisesTV = (TextView) findViewById(R.id.selected_exercises);
+        createRoutine = (Button) findViewById(R.id.create_routine);
+        monday = (CheckBox) findViewById(R.id.Monday);
+        tuesday = (CheckBox) findViewById(R.id.Tuesday);
+        wednesday = (CheckBox) findViewById(R.id.Wednesday);
+        thursday = (CheckBox) findViewById(R.id.Thursday);
+        friday = (CheckBox) findViewById(R.id.Friday);
+        saturday = (CheckBox) findViewById(R.id.Saturday);
+        sunday = (CheckBox) findViewById(R.id.Sunday);
+        days = new ArrayList<String>();
 
         db = Database.getInstance(MainActivity.this);
         exercises = db.exerciseDao().getAllExercises();
@@ -80,20 +99,46 @@ public class MainActivity extends AppCompatActivity{
                 for (Exercise exercise: exercises){
 
                     if (exercise.getId() == selected){
-                        if (selectedExercises.contains(exercise)){
+                        if (selectedExercises.contains(exercise.getName())){
                             Toast.makeText(MainActivity.this, "Cannot add same exercise",
                                     Toast.LENGTH_LONG).show();
                         }
                         else {
-                            selectedExercises.add(exercise);
+                            selectedExercises.add(exercise.getName());
                             String text = selectedExercisesTV.getText().toString();
-                            text += " " + exercise.getName() + "|";
+                            text += "\n " + exercise.getName();
                             selectedExercisesTV.setText(text);
                             Toast.makeText(MainActivity.this, "Exercise added successfully",
                                     Toast.LENGTH_LONG).show();
                         }
                     }
                 }
+            }
+        });
+
+        createRoutine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String starts = startDate.getText().toString();
+                String finishes = finishDate.getText().toString();
+                String time = startTime.getText().toString();
+                days.clear();
+                if(monday.isChecked()){ days.add(monday.getText().toString()); }
+                if(tuesday.isChecked()){ days.add(tuesday.getText().toString()); }
+                if(wednesday.isChecked()){ days.add(wednesday.getText().toString()); }
+                if(thursday.isChecked()){ days.add(thursday.getText().toString()); }
+                if(friday.isChecked()){ days.add(friday.getText().toString()); }
+                if(saturday.isChecked()){ days.add(saturday.getText().toString()); }
+                if(sunday.isChecked()){ days.add(sunday.getText().toString()); }
+                if(!days.isEmpty() && !selectedExercises.isEmpty()) {
+                    Routine routine = new Routine(starts, finishes, days, selectedExercises, time, true);
+                    Toast.makeText(MainActivity.this, "Routine created Successfully", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Cannot create routine", Toast.LENGTH_LONG).show();
+                }
+                //db.routineDao().insertRoutine(routine);
             }
         });
 
@@ -170,5 +215,4 @@ public class MainActivity extends AppCompatActivity{
         };
         return listener;
     }
-
 }

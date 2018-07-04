@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -71,9 +72,11 @@ public class MainActivity extends AppCompatActivity{
         saturday = (CheckBox) findViewById(R.id.Saturday);
         sunday = (CheckBox) findViewById(R.id.Sunday);
         days = new ArrayList<String>();
-
         db = Database.getInstance(MainActivity.this);
         exercises = db.exerciseDao().getAllExercises();
+
+        Log.d("Count",String.valueOf( db.exerciseDao().countExercices()));
+
         exerciseNames = new ArrayList<String>();
         for (Exercise exercise: exercises
              ) {

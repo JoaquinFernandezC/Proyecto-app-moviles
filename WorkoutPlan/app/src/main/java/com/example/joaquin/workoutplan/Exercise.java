@@ -47,7 +47,7 @@ public class Exercise {
 
     public static Exercise[] populateData(){
         return new Exercise[]{
-                new Exercise("Push Ups", "Upper Body", false,
+                new Exercise("PushUps", "Upper Body", false,
                         4, 15),
                 new Exercise("Crunches", "Abs", false,
                         4, 20),

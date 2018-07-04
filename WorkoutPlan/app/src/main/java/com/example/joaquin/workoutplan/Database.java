@@ -4,13 +4,12 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
-import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java.util.concurrent.Executors;
 
-@android.arch.persistence.room.Database(entities = {Exercise.class, Routine.class}, version = 3, exportSchema = false)
+@android.arch.persistence.room.Database(entities = {Exercise.class, Routine.class}, version = 2)
 @TypeConverters({Converters.class})
 public abstract class Database extends RoomDatabase {
 
@@ -26,11 +25,6 @@ public abstract class Database extends RoomDatabase {
         return INSTANCE;
     }
 
-    static final Migration Migration_1_3 = new Migration(1, 3){
-        @Override
-        public void migrate(SupportSQLiteDatabase database){
-        }
-    };
     private static Database buildDatabase(final Context context){
         return Room.databaseBuilder(context, Database.class,
                 "Database").addCallback(new Callback() {
@@ -44,6 +38,6 @@ public abstract class Database extends RoomDatabase {
                     }
                 });
             }
-        }).addMigrations(Migration_1_3).allowMainThreadQueries().build();
+        }).allowMainThreadQueries().build();
     }
 }

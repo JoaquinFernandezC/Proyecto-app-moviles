@@ -17,6 +17,9 @@ public interface ExerciseDao {
     @Query("SELECT * from exercise_table ORDER BY Id ASC")
     List<Exercise> getAllExercises();
 
+    @Query("SELECT * from exercise_table WHERE id = :id")
+    Exercise getExerciseById(int id);
+
     @Query("SELECT COUNT(*) from exercise_table")
     int countExercices();
 

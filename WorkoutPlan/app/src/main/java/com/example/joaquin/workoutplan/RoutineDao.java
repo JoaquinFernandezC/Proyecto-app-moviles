@@ -13,7 +13,22 @@ public interface RoutineDao {
     @Insert(onConflict = REPLACE)
     void insertRoutine(Routine routine);
 
-    @Query("SELECT * from exercise_table ORDER BY Id ASC")
-    List<Exercise> getAllExercises();
+    @Query("SELECT * from routine_table ORDER BY Id ASC")
+    List<Routine> getAllRoutines();
+
+    @Query("SELECT COUNT(*) from routine_table")
+    int countRoutines();
+
+    @Query("SELECT * from routine_table WHERE id = :id")
+    Routine getRoutineById(int id);
+
+    @Query("DELETE from routine_table")
+    void deleteAll();
+
+    @Query("SELECT id from routine_table WHERE is_active= 1")
+    int getRoutineId();
+
+    @Query("UPDATE routine_table SET is_active = 0")
+    void setRoutinesInactive();
 }
 

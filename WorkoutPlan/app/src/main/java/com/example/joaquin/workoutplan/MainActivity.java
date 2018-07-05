@@ -1,12 +1,13 @@
 package com.example.joaquin.workoutplan;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity{
     private List<Exercise> exercises;
     private ArrayList<String> exerciseNames;
     private ArrayAdapter adapter;
-    private ArrayList<String> selectedExercises;
+    private ArrayList<Integer> selectedExercises;
     private TextView selectedExercisesTV;
     private Button createRoutine;
     private CheckBox monday;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity{
     private CheckBox saturday;
     private CheckBox sunday;
     private ArrayList<String> days;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity{
         startTime = (TextView) findViewById(R.id.hour);
         exerciseSpinner = (Spinner) findViewById(R.id.exercises);
         selectExercise = (Button) findViewById(R.id.select_exercise);
-        selectedExercises = new ArrayList<String>();
+        selectedExercises = new ArrayList<Integer>();
         selectedExercisesTV = (TextView) findViewById(R.id.selected_exercises);
         createRoutine = (Button) findViewById(R.id.create_routine);
         monday = (CheckBox) findViewById(R.id.Monday);
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity{
         db = Database.getInstance(MainActivity.this);
         exercises = db.exerciseDao().getAllExercises();
 
-        Log.d("Count",String.valueOf( db.exerciseDao().countExercices()));
+        intent = new Intent();
 
         exerciseNames = new ArrayList<String>();
         for (Exercise exercise: exercises
@@ -102,17 +104,17 @@ public class MainActivity extends AppCompatActivity{
                 for (Exercise exercise: exercises){
 
                     if (exercise.getId() == selected){
-                        if (selectedExercises.contains(exercise.getName())){
+                        if (selectedExercises.contains(exercise.getId())){
                             Toast.makeText(MainActivity.this, "Cannot add same exercise",
-                                    Toast.LENGTH_LONG).show();
+                                    Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            selectedExercises.add(exercise.getName());
+                            selectedExercises.add(exercise.getId());
                             String text = selectedExercisesTV.getText().toString();
                             text += "\n " + exercise.getName();
                             selectedExercisesTV.setText(text);
                             Toast.makeText(MainActivity.this, "Exercise added successfully",
-                                    Toast.LENGTH_LONG).show();
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -134,13 +136,17 @@ public class MainActivity extends AppCompatActivity{
                 if(friday.isChecked()){ days.add(friday.getText().toString()); }
                 if(saturday.isChecked()){ days.add(saturday.getText().toString()); }
                 if(sunday.isChecked()){ days.add(sunday.getText().toString()); }
-                if(!days.isEmpty() && !selectedExercises.isEmpty()) {
+                if(!days.isEmpty() && !selectedExercises.isEmpty() && !starts.isEmpty() && !finishes.isEmpty() && !time.isEmpty()) {
+                    db.routineDao().setRoutinesInactive();
                     Routine routine = new Routine(starts, finishes, days, selectedExercises, time, true);
-                    Toast.makeText(MainActivity.this, "Routine created Successfully", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Routine created Successfully", Toast.LENGTH_SHORT).show();
                     db.routineDao().insertRoutine(routine);
+                    intent.putExtra("Routine_id", db.routineDao().getRoutineId());
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
                 }
                 else{
-                    Toast.makeText(MainActivity.this, "Cannot create routine", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Cannot create routine: Missing Data", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -170,7 +176,9 @@ public class MainActivity extends AppCompatActivity{
         startTimeListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                String time = hour + ":" + minute;
+                String h = hour < 10? "0": "";
+                String m = minute < 10? "0": "";
+                String time = h + hour + ":" + m + minute;
                 startTime.setText(time);
                 startTime.setGravity(Gravity.CENTER);
             }
@@ -212,7 +220,9 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onDateSet(DatePicker datePicker,  int year, int month, int day) {
                 month = month+1;
-                String date = day + "/" + month + "/" + year;
+                String m = month < 10? "0": "";
+                String d = day < 10? "0": "";
+                String date = d + day + "/" + m + month + "/" + year;
                 textView.setText(date);
                 textView.setGravity(Gravity.CENTER);
             }

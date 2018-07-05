@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 
 import java.util.concurrent.Executors;
 
-@android.arch.persistence.room.Database(entities = {Exercise.class, Routine.class}, version = 2)
+@android.arch.persistence.room.Database(entities = {Exercise.class, Routine.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class Database extends RoomDatabase {
 

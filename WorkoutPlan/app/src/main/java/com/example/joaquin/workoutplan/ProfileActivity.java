@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -32,6 +33,10 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView startDate;
     private TextView finishDate;
     private SimpleDateFormat simpleDateFormat;
+    private List<Routine> routines;
+    private boolean isAnyActive;
+    private Button createNewRoutine;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,19 +51,40 @@ public class ProfileActivity extends AppCompatActivity {
         progress = (TextView) findViewById(R.id.progress);
         startDate = (TextView) findViewById(R.id.startDate);
         finishDate = (TextView) findViewById(R.id.finishDate);
+        createNewRoutine = (Button) findViewById(R.id.new_routine);
         simpleDateFormat = new SimpleDateFormat("dd/M/yyyy");
         dateTime.setFormat12Hour("E, MMM dd, yyyy hh:mm a");
         exercisesId = new ArrayList<Integer>();
         db = Database.getInstance(ProfileActivity.this);
+        routines = db.routineDao().getAllRoutines();
+
         if (db.routineDao().countRoutines()== 0){
-            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+            intent = new Intent(ProfileActivity.this, MainActivity.class);
             startActivityForResult(intent, 1);
         }
+
         else{
+            for (Routine r: routines){
+                if (r.getIsActive()) isAnyActive = true;
+                break;
+            }
+            if (!isAnyActive)
+            {
+                intent = new Intent(ProfileActivity.this, MainActivity.class);
+                startActivityForResult(intent, 1);
+            }
             int id = db.routineDao().getRoutineId();
             setText(id);
 
         }
+
+        createNewRoutine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        });
 
         plus.setOnClickListener(new View.OnClickListener() {
             @Override

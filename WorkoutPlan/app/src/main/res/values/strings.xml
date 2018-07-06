@@ -15,4 +15,10 @@
     <string name="select_exercise">Select exercise</string>
     <string name="selected_exercises">Selected Exercises:</string>
     <string name="create_routine">Create Routine</string>
+    <string name="started_in">Started in:</string>
+    <string name="finishes">Finishes:</string>
+    <string name="exercises">Exercises:</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="not_happy_create_new_routine">Not happy? Create New Routine</string>
 </resources>

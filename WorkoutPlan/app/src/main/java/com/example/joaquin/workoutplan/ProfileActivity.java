@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -37,6 +38,10 @@ public class ProfileActivity extends AppCompatActivity {
     private boolean isAnyActive;
     private Button createNewRoutine;
     private Intent intent;
+    private TextView startHour;
+    private ArrayList<String> daysList;
+    private TextView daysInRoutine;
+    private String daysToSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,8 @@ public class ProfileActivity extends AppCompatActivity {
         startDate = (TextView) findViewById(R.id.startDate);
         finishDate = (TextView) findViewById(R.id.finishDate);
         createNewRoutine = (Button) findViewById(R.id.new_routine);
+        startHour = (TextView) findViewById(R.id.start_hour);
+        daysInRoutine = (TextView) findViewById(R.id.days_in_routine);
         simpleDateFormat = new SimpleDateFormat("dd/M/yyyy");
         dateTime.setFormat12Hour("E, MMM dd, yyyy hh:mm a");
         exercisesId = new ArrayList<Integer>();
@@ -64,9 +71,12 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         else{
+            Log.d("Count", String.valueOf(db.routineDao().countRoutines()));
             for (Routine r: routines){
-                if (r.getIsActive()) isAnyActive = true;
-                break;
+                if (r.getIsActive()) {
+                    isAnyActive = true;
+                    break;
+                }
             }
             if (!isAnyActive)
             {
@@ -134,12 +144,19 @@ public class ProfileActivity extends AppCompatActivity {
     private void setText(int id){
         routine = db.routineDao().getRoutineById(id);
         exercisesId = routine.getExercises();
+        daysList = routine.getDays();
+        ex = "Exercises:";
+        daysToSet = "Days:";
+
         for (Integer exerciseId: exercisesId){
             exercise = db.exerciseDao().getExerciseById(exerciseId);
             ex += "\n"  + exercise.getName() + "(" + exercise.getBodyPart() + "): "
                     + exercise.getSets() + " sets of " + exercise.getRepetitions();
             if(exercise.getIsRepTime()) ex += " seconds each";
             else ex += " repetitions each";
+        }
+        for (String day: daysList){
+            daysToSet += "\n" + day;
         }
         try{
             Date start = simpleDateFormat.parse(routine.getStartDate());
@@ -153,8 +170,10 @@ public class ProfileActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         exercisesTV.setText(ex);
-        startDate.setText(startDate.getText() + routine.getStartDate());
-        finishDate.setText(finishDate.getText() + routine.getFinishDate());
+        startDate.setText("Started in: " + routine.getStartDate());
+        finishDate.setText("Finishes: " + routine.getFinishDate());
+        startHour.setText("Starting Hour: "+ routine.getHour());
+        daysInRoutine.setText(daysToSet);
 
     }
 }
